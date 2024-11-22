@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <errno.h>
+#include <assert.h>
 
 void create_http_server(struct server* serv, int port) {
   struct sockaddr_in servaddr;
@@ -14,13 +16,23 @@ void create_http_server(struct server* serv, int port) {
   servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
   servaddr.sin_port = htons(port);
 
-  if (bind(sock, (struct sockaddr*)&servaddr, sizeof(servaddr)) < 0) {
+  const int option_value = 1;
+  const socklen_t option_length = sizeof(option_value);
+
+  int rtn = setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (void*) &option_value, option_length);
+
+  assert(rtn == 0);
+
+  int bind_res = bind(sock, (struct sockaddr*)&servaddr, sizeof(servaddr));
+  if (bind_res == -1) {
+    printf("Failed binding server: %s\n", strerror(errno));
     serv->error = true;
     return;
   }
 
   serv->sock = sock;
   serv->error = false;
+  serv->closed = false;
 }
 
 void start_server(struct server* serv) {
@@ -31,7 +43,7 @@ void start_server(struct server* serv) {
 
   printf("Server ready\n");
 
-  for (;;) {
+  while (!serv->closed) {
     len = sizeof(client);
     int connection = accept(serv->sock, (struct sockaddr*)&client, &len);
 
@@ -46,4 +58,8 @@ void start_server(struct server* serv) {
 
     close(connection);
   }
+}
+
+void close_server(struct server* serv) {
+  close(serv->sock);
 }
