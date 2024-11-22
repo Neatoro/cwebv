@@ -6,23 +6,7 @@
 
 struct server serv;
 
-void sigint_handler(int signal) {
-  if (signal == SIGINT) {
-    close_server(&serv);
-    exit(0);
-  }
-}
-
-void register_exit_handler() {
-  struct sigaction act;
-
-  bzero(&act, sizeof(act));
-
-  act.sa_handler = &sigint_handler;
-
-  sigaction(SIGINT, &act, NULL);
-}
-
+CLOSE_HANDLER(serv)
 
 int main(int argc, char *argv[]) {
   create_http_server(&serv, 8080);
