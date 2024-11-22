@@ -4,34 +4,36 @@
 #include <unistd.h>
 #include <string.h>
 
-int create_http_server(int port) {
-  struct sockaddr_in server;
+void create_http_server(struct server* serv, int port) {
+  struct sockaddr_in servaddr;
 
   int sock = socket(AF_INET, SOCK_STREAM, 0);
-  memset(&server, 0, sizeof(server));
+  memset(&servaddr, 0, sizeof(servaddr));
 
-  server.sin_family = AF_INET;
-  server.sin_addr.s_addr = htonl(INADDR_ANY);
-  server.sin_port = htons(port);
+  servaddr.sin_family = AF_INET;
+  servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+  servaddr.sin_port = htons(port);
 
-  if (bind(sock, (struct sockaddr*)&server, sizeof(server)) < 0) {
-    return -1;
+  if (bind(sock, (struct sockaddr*)&servaddr, sizeof(servaddr)) < 0) {
+    serv->error = true;
+    return;
   }
 
-  return sock;
+  serv->sock = sock;
+  serv->error = false;
 }
 
-void start_server(int server) {
+void start_server(struct server* serv) {
   struct sockaddr_in client;
   unsigned int len;
   
-  listen(server, 10);
+  listen(serv->sock, 10);
 
   printf("Server ready\n");
 
   for (;;) {
     len = sizeof(client);
-    int connection = accept(server, (struct sockaddr*)&client, &len);
+    int connection = accept(serv->sock, (struct sockaddr*)&client, &len);
 
     if (connection < 0) {
       printf("Failed to accept connection\n");
@@ -47,11 +49,13 @@ void start_server(int server) {
 }
 
 int main(int argc, char *argv[]) {
-  int server = create_http_server(8080);
-  if (server < -1) {
+  struct server serv;
+  create_http_server(&serv, 8080);
+  
+  if (serv.error) {
     printf("Server failed to bind\n");
     return -1;
   }
 
-  start_server(server);
+  start_server(&serv);
 }
