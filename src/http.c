@@ -1,6 +1,5 @@
 #include "http.h"
 
-#include <assert.h>
 #include <errno.h>
 #include <netinet/in.h>
 #include <stdio.h>
@@ -21,11 +20,9 @@ void create_http_server(struct server *serv, int port) {
   const int option_value = 1;
   const socklen_t option_length = sizeof(option_value);
 
-  int rtn = setsockopt(
+  setsockopt(
       sock, SOL_SOCKET, SO_REUSEADDR, (void *)&option_value, option_length
   );
-
-  assert(rtn == 0);
 
   int bind_res = bind(sock, (struct sockaddr *)&servaddr, sizeof(servaddr));
   if (bind_res == -1) {
