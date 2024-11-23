@@ -9,7 +9,7 @@ struct server serv;
 CLOSE_HANDLER(serv)
 
 int main(int argc, char *argv[]) {
-  create_http_server(&serv, 8080);
+  serv = create_http_server(8080);
 
   if (serv.error) {
     return -1;

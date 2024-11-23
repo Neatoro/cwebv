@@ -7,8 +7,9 @@
 #include <string.h>
 #include <unistd.h>
 
-void create_http_server(struct server *serv, int port) {
+struct server create_http_server(int port) {
   struct sockaddr_in servaddr;
+  struct server serv;
 
   int sock = socket(AF_INET, SOCK_STREAM, 0);
   memset(&servaddr, 0, sizeof(servaddr));
@@ -27,13 +28,15 @@ void create_http_server(struct server *serv, int port) {
   int bind_res = bind(sock, (struct sockaddr *)&servaddr, sizeof(servaddr));
   if (bind_res == -1) {
     printf("Failed binding server: %s\n", strerror(errno));
-    serv->error = true;
-    return;
+    serv.error = true;
+    return serv;
   }
 
-  serv->sock = sock;
-  serv->error = false;
-  serv->closed = false;
+  serv.sock = sock;
+  serv.error = false;
+  serv.closed = false;
+
+  return serv;
 }
 
 void start_server(struct server *serv) {
