@@ -7,6 +7,8 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "buffer/buffer.h"
+
 struct server create_http_server(int port) {
   struct sockaddr_in servaddr;
   struct server serv;
@@ -56,11 +58,23 @@ void start_server(struct server *serv) {
       continue;
     }
 
-    char buffer[1025];
-    snprintf(buffer, sizeof(buffer), "Hello from Server\n");
-    write(connection, buffer, strlen(buffer));
+    struct buffer buf = init_buffer();
+    int recv_size = 0;
+    char page[DEFAULT_SIZE];
+
+    do {
+      memset(&page, 0, sizeof(page));
+
+      if ((recv_size = recv(connection, page, DEFAULT_SIZE, 0)) < 0) {
+        printf("Failed to read buffer\n");
+        break;
+      }
+
+      append_data_to_buffer(&buf, page, recv_size);
+    } while (recv_size == DEFAULT_SIZE);
 
     close(connection);
+    free_buffer(buf);
   }
 }
 
