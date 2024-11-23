@@ -1,6 +1,6 @@
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <netinet/in.h>
+#include <signal.h>
 #include <stdbool.h>
 
 #define CLOSE_HANDLER(serv) \

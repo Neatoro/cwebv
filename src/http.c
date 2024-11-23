@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>
+#include <netinet/in.h>
 #include <assert.h>
 
 void create_http_server(struct server* serv, int port) {
