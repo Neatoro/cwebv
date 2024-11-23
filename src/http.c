@@ -8,6 +8,8 @@
 #include <unistd.h>
 
 #include "buffer/buffer.h"
+#include "request.h"
+#include "request/parser.h"
 
 struct server create_http_server(int port) {
   struct sockaddr_in servaddr;
@@ -72,6 +74,8 @@ void start_server(struct server *serv) {
 
       append_data_to_buffer(&buf, page, recv_size);
     } while (recv_size == DEFAULT_SIZE);
+
+    struct request req = parse_request(buf.data);
 
     close(connection);
     free_buffer(buf);
