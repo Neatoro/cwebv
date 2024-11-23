@@ -23,5 +23,8 @@ target/example/%: target/libhttp.a $(EXAMPLE_OBJ_DIR)/%.o
 example: target/example/small
 compile: target/libhttp.a
 
+format: example/small.c src/http.c include/http.h
+	clang-format -i $^
+
 clean:
 	rm -rf target
