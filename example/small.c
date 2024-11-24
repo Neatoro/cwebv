@@ -3,17 +3,24 @@
 #include <strings.h>
 
 #include "http.h"
+#include "request.h"
 
 struct server serv;
 
 CLOSE_HANDLER(serv)
 
-int main(int argc, char *argv[]) {
+void request_handler(struct request* req) {
+  printf("Requested Path: %s\n", req->path);
+}
+
+int main(int argc, char* argv[]) {
   serv = create_http_server(8080);
 
   if (serv.error) {
     return -1;
   }
+
+  add_request_handler(&serv, request_handler);
 
   register_exit_handler();
 

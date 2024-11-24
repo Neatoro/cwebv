@@ -77,6 +77,10 @@ void start_server(struct server *serv) {
 
     struct request req = parse_request(buf.data);
 
+    if (serv->handler) {
+      serv->handler(&req);
+    }
+
     close(connection);
     free_buffer(buf);
     free_request(&req);
@@ -84,3 +88,9 @@ void start_server(struct server *serv) {
 }
 
 void close_server(struct server *serv) { close(serv->sock); }
+
+void add_request_handler(
+    struct server *serv, void (*handler)(struct request *req)
+) {
+  serv->handler = handler;
+}

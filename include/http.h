@@ -5,6 +5,8 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 
+#include "request.h"
+
 #define CLOSE_HANDLER(serv)           \
   void sigint_handler(int signal) {   \
     if (signal == SIGINT) {           \
@@ -24,11 +26,15 @@ struct server {
   int sock;
   bool error;
   bool closed;
+  void (*handler)(struct request *req);
 };
 
 struct server create_http_server(int port);
 
 void start_server(struct server *serv);
-
 void close_server(struct server *serv);
+
+void add_request_handler(
+    struct server *serv, void (*handler)(struct request *req)
+);
 #endif
