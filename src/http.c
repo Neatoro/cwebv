@@ -79,6 +79,7 @@ void start_server(struct server *serv) {
 
     close(connection);
     free_buffer(buf);
+    free_request(&req);
   }
 }
 
