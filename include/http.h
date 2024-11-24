@@ -1,3 +1,5 @@
+#ifndef _CWEBV_HTTP
+#define _CWEBV_HTTP
 #include <signal.h>
 #include <stdbool.h>
 #include <sys/socket.h>
@@ -29,3 +31,4 @@ struct server create_http_server(int port);
 void start_server(struct server *serv);
 
 void close_server(struct server *serv);
+#endif
