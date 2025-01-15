@@ -83,6 +83,7 @@ void start_server(struct server *serv) {
 
     struct request req = parse_request(buf.data);
     struct response res = create_response();
+    response_add_header(&res, "Host", "localhost");
 
     if (serv->handler) {
       serv->handler(&req, &res);

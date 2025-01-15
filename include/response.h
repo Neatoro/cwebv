@@ -12,5 +12,7 @@ struct response {
   char* body;
 };
 
-void response_free(struct response* req);
+void response_add_header(struct response* res, char* name, char* value);
+
+void response_free(struct response* res);
 #endif
