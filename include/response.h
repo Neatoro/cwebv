@@ -12,5 +12,5 @@ struct response {
   char* body;
 };
 
-void free_response(struct response* req);
+void response_free(struct response* req);
 #endif

@@ -36,6 +36,7 @@ void start_server(struct server *serv);
 void close_server(struct server *serv);
 
 void add_request_handler(
-    struct server *serv, void (*handler)(struct request *req, struct response *res)
+    struct server *serv,
+    void (*handler)(struct request *req, struct response *res)
 );
 #endif

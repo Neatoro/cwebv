@@ -13,7 +13,7 @@ struct request {
   struct request_query_param* query;
 };
 
-void free_request(struct request* req);
+void request_free(struct request* req);
 
 struct request_query_param* get_query_param(struct request* req, char* name);
 #endif

@@ -66,7 +66,7 @@ void start_server(struct server *serv) {
       continue;
     }
 
-    struct buffer buf = init_buffer();
+    struct buffer buf = buffer_init();
     int recv_size = 0;
     char page[DEFAULT_SIZE];
 
@@ -78,7 +78,7 @@ void start_server(struct server *serv) {
         break;
       }
 
-      append_data_to_buffer(&buf, page, recv_size);
+      buffer_append_data(&buf, page, recv_size);
     } while (recv_size == DEFAULT_SIZE);
 
     struct request req = parse_request(buf.data);
@@ -89,16 +89,17 @@ void start_server(struct server *serv) {
     }
 
     close(connection);
-    free_buffer(buf);
-    free_request(&req);
-    free_response(&res);
+    buffer_free(buf);
+    request_free(&req);
+    response_free(&res);
   }
 }
 
 void close_server(struct server *serv) { close(serv->sock); }
 
 void add_request_handler(
-    struct server *serv, void (*handler)(struct request *req, struct response *res)
+    struct server *serv,
+    void (*handler)(struct request *req, struct response *res)
 ) {
   serv->handler = handler;
 }
