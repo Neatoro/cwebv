@@ -8,8 +8,14 @@
 #include <unistd.h>
 
 #include "buffer/buffer.h"
-#include "request.h"
 #include "request/parser.h"
+
+struct response create_response() {
+  struct response res;
+  res.header_count = 0;
+  res.header = NULL;
+  return res;
+}
 
 struct server create_http_server(int port) {
   struct sockaddr_in servaddr;
@@ -76,21 +82,23 @@ void start_server(struct server *serv) {
     } while (recv_size == DEFAULT_SIZE);
 
     struct request req = parse_request(buf.data);
+    struct response res = create_response();
 
     if (serv->handler) {
-      serv->handler(&req);
+      serv->handler(&req, &res);
     }
 
     close(connection);
     free_buffer(buf);
     free_request(&req);
+    free_response(&res);
   }
 }
 
 void close_server(struct server *serv) { close(serv->sock); }
 
 void add_request_handler(
-    struct server *serv, void (*handler)(struct request *req)
+    struct server *serv, void (*handler)(struct request *req, struct response *res)
 ) {
   serv->handler = handler;
 }
