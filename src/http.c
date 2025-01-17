@@ -10,10 +10,11 @@
 #include "buffer/buffer.h"
 #include "request/parser.h"
 
-struct response create_response() {
+struct response create_response(int connection) {
   struct response res;
   res.header_count = 0;
   res.header = NULL;
+  res.connection = connection;
   return res;
 }
 
@@ -82,7 +83,7 @@ void start_server(struct server *serv) {
     } while (recv_size == DEFAULT_SIZE);
 
     struct request req = parse_request(buf.data);
-    struct response res = create_response();
+    struct response res = create_response(connection);
     response_add_header(&res, "Host", "localhost");
 
     if (serv->handler) {

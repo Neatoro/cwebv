@@ -7,6 +7,7 @@ struct response_header {
 
 struct response {
   int header_count;
+  int connection;
   struct response_header* header;
 
   char* body;
@@ -15,4 +16,6 @@ struct response {
 void response_add_header(struct response* res, char* name, char* value);
 
 void response_free(struct response* res);
+
+void response_send(struct response* res);
 #endif

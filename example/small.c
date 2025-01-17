@@ -16,6 +16,7 @@ void request_handler(struct request* req, struct response* res) {
   if (foo != NULL) {
     printf("Foo Query Param: name(%s), value(%s)\n", foo->name, foo->value);
   }
+  response_send(res);
 }
 
 int main(int argc, char* argv[]) {
