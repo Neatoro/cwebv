@@ -1,5 +1,6 @@
 #include "response.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
@@ -17,17 +18,13 @@ void response_add_header(struct response* res, char* name, char* value) {
   header.value = value;
 
   if (res->header != NULL) {
-    res->header = realloc(
-        res->header, sizeof(struct response_header) * (res->header_count + 1)
-    );
+    res->header =
+        realloc(res->header, response_header_size * (res->header_count + 1));
   } else {
-    res->header = calloc(1, sizeof(struct response_header));
+    res->header = calloc(1, response_header_size);
   }
 
-  memcpy(
-      res->header + (sizeof(struct response_header) * res->header_count),
-      &header, sizeof(header)
-  );
+  memcpy(res->header + res->header_count, &header, sizeof(header));
 
   res->header_count++;
 }
@@ -42,8 +39,10 @@ void response_send(struct response* res) {
 
   for (int i = 0; i < res->header_count; ++i) {
     struct response_header header = res->header[i];
+
     int header_line_size = strlen(header.name) + strlen(header.value) + 4;
     char header_line[header_line_size];
+
     strcpy(header_line, header.name);
     strcat(header_line, ": ");
     strcat(header_line, header.value);

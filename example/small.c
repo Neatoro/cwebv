@@ -16,6 +16,9 @@ void request_handler(struct request* req, struct response* res) {
   if (foo != NULL) {
     printf("Foo Query Param: name(%s), value(%s)\n", foo->name, foo->value);
   }
+
+  response_add_header(res, "X-Message", "Hello World");
+
   response_send(res);
 }
 

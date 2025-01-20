@@ -5,6 +5,8 @@ struct response_header {
   char* value;
 };
 
+#define response_header_size sizeof(struct response_header)
+
 struct response {
   int header_count;
   int connection;
