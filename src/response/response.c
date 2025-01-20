@@ -1,10 +1,13 @@
 #include "response.h"
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
+
+#include "../utils/string_helper.h"
 
 void response_free(struct response* res) {
   if (res->header != NULL) {
@@ -29,13 +32,34 @@ void response_add_header(struct response* res, char* name, char* value) {
   res->header_count++;
 }
 
+bool response_has_header(struct response* res, char* name) {
+  struct response_header* header = res->header;
+  for (int i = 0; i < res->header_count; ++i) {
+    char* header_name = strlwr(header->name);
+    if (strcmp(header_name, name) == 0) {
+      free(header_name);
+      return true;
+    }
+
+    free(header_name);
+    ++header;
+  }
+  return false;
+}
+
 void response_send(struct response* res) {
   int connection = res->connection;
 
   char* start_line = "HTTP/1.1 200 OK\n";
   send(connection, start_line, strlen(start_line), 0);
 
-  char* data = "OK\n";
+  if (!response_has_header(res, "content-type")) {
+    response_add_header(res, "content-type", "text/plain");
+  }
+
+  int body_size = strlen(res->body);
+  char* content_length_value = int_to_str(body_size);
+  response_add_header(res, "content-length", content_length_value);
 
   for (int i = 0; i < res->header_count; ++i) {
     struct response_header header = res->header[i];
@@ -52,5 +76,7 @@ void response_send(struct response* res) {
   }
 
   send(connection, "\n", 1, 0);
-  send(connection, data, strlen(data), 0);
+  send(connection, res->body, strlen(res->body), 0);
+
+  free(content_length_value);
 }

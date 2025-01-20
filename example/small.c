@@ -18,6 +18,8 @@ void request_handler(struct request* req, struct response* res) {
   }
 
   response_add_header(res, "X-Message", "Hello World");
+  response_add_header(res, "Content-Type", "text/html");
+  res->body = "Simple Body\n";
 
   response_send(res);
 }

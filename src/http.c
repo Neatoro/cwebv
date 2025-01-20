@@ -15,6 +15,9 @@ struct response create_response(int connection) {
   res.header_count = 0;
   res.header = NULL;
   res.connection = connection;
+
+  res.body = NULL;
+
   return res;
 }
 

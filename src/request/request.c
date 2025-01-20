@@ -9,7 +9,7 @@ void request_free(struct request* req) {
     free(req->query[i].name);
     free(req->query[i].value);
   }
-  
+
   if (req->query != NULL) {
     free(req->query);
   }
