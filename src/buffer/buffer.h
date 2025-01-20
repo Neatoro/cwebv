@@ -14,5 +14,5 @@ struct buffer buffer_init();
 
 void buffer_free(struct buffer buf);
 
-void buffer_append_data(struct buffer* buf, char data[], int len);
+void buffer_append_data(struct buffer* buf, char* data, int len);
 #endif

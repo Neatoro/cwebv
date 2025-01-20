@@ -72,10 +72,10 @@ void start_server(struct server *serv) {
 
     struct buffer buf = buffer_init();
     int recv_size = 0;
-    char page[DEFAULT_SIZE];
+    char *page = malloc(DEFAULT_SIZE);
 
     do {
-      memset(&page, 0, sizeof(page));
+      memset(page, 0, DEFAULT_SIZE);
 
       if ((recv_size = recv(connection, page, DEFAULT_SIZE, 0)) < 0) {
         printf("Failed to read buffer\n");
@@ -84,6 +84,8 @@ void start_server(struct server *serv) {
 
       buffer_append_data(&buf, page, recv_size);
     } while (recv_size == DEFAULT_SIZE);
+
+    free(page);
 
     struct request req = parse_request(buf.data);
     struct response res = create_response(connection);

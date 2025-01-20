@@ -20,23 +20,19 @@ struct buffer buffer_init() {
 void buffer_free(struct buffer buf) { free(buf.data); }
 
 void extend_buffer(struct buffer* buf) {
-  int new_size = buf->allocated_size + DEFAULT_SIZE;
-
-  char* new_data = malloc(new_size);
-  memset(new_data, 0, sizeof(char));
-  strcpy(new_data, buf->data);
-
+  int new_size = buf->allocated_size * 2;
   buf->allocated_size = new_size;
-  free(buf->data);
-  buf->data = new_data;
+  buf->data = realloc(buf->data, new_size);
 }
 
-void buffer_append_data(struct buffer* buf, char data[], int len) {
+void buffer_append_data(struct buffer* buf, char* data, int len) {
   if (buf->used_size + len > buf->allocated_size) {
     extend_buffer(buf);
   }
 
-  strcat(buf->data, data);
+  for (int i = 0; i < len; ++i) {
+    buf->data[buf->used_size + i] = data[i];
+  }
 
-  buf->used_size = strlen(buf->data);
+  buf->used_size = buf->used_size + len;
 }
