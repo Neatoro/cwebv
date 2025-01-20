@@ -84,6 +84,8 @@ char* parse_path(char* rdp, struct request* req) {
 
 struct request parse_request(char* request_data) {
   struct request req;
+  req.query_params_count = 0;
+  req.query = NULL;
 
   char* rdp = request_data;
   rdp = parse_method(rdp, &req);

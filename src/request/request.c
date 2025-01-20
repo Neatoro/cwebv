@@ -9,7 +9,10 @@ void request_free(struct request* req) {
     free(req->query[i].name);
     free(req->query[i].value);
   }
-  free(req->query);
+  
+  if (req->query != NULL) {
+    free(req->query);
+  }
 }
 
 struct request_query_param* get_query_param(struct request* req, char* name) {
