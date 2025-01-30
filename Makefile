@@ -1,6 +1,6 @@
 CC=gcc
 AR=ar
-CFLAGS=-I./include
+CFLAGS=-I./include -I./lib
 OBJ_DIR=target/obj
 EXAMPLE_OBJ_DIR=target/example/obj
 LIB_SOURCES := $(shell find src -name '*.c' -o -name '*.h')
@@ -10,11 +10,14 @@ INCLUDE_SOURCES := $(shell find include -name '*.h')
 
 TARGET = clean compile
 
+lib/cJSON/cJSON.o:
+	make -C ./lib/cJSON static
+
 $(OBJ_DIR)/%.o: src/%.c
 	mkdir -p $(dir $@)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-target/libhttp.a: $(addprefix $(OBJ_DIR)/,$(LIB_OBJ))
+target/libhttp.a: $(addprefix $(OBJ_DIR)/,$(LIB_OBJ)) lib/cJSON/cJSON.o
 	$(AR) rcs target/libhttp.a $^
 
 $(EXAMPLE_OBJ_DIR)/%.o: example/%.c
@@ -31,4 +34,5 @@ format: $(EXAMPLE_SOURCES) $(LIB_SOURCES) $(INCLUDE_SOURCES)
 	clang-format -i $^
 
 clean:
+	make -C ./lib/cJSON clean
 	rm -rf target
