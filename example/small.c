@@ -6,7 +6,7 @@
 #include "request.h"
 #include "response.h"
 
-struct server serv;
+server serv;
 
 CLOSE_HANDLER(serv)
 

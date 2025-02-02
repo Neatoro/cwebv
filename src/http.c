@@ -21,9 +21,9 @@ struct response create_response(int connection) {
   return res;
 }
 
-struct server create_http_server(int port) {
+server create_http_server(int port) {
   struct sockaddr_in servaddr;
-  struct server serv;
+  server serv;
 
   int sock = socket(AF_INET, SOCK_STREAM, 0);
   memset(&servaddr, 0, sizeof(servaddr));
@@ -53,7 +53,7 @@ struct server create_http_server(int port) {
   return serv;
 }
 
-void start_server(struct server *serv) {
+void start_server(server *serv) {
   struct sockaddr_in client;
   unsigned int len;
 
@@ -102,10 +102,10 @@ void start_server(struct server *serv) {
   }
 }
 
-void close_server(struct server *serv) { close(serv->sock); }
+void close_server(server *serv) { close(serv->sock); }
 
 void add_request_handler(
-    struct server *serv,
+    server *serv,
     void (*handler)(struct request *req, struct response *res)
 ) {
   serv->handler = handler;
