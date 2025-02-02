@@ -10,7 +10,7 @@ server serv;
 
 CLOSE_HANDLER(serv)
 
-void request_handler(struct request* req, struct response* res) {
+void request_handler(struct request* req, response* res) {
   printf("Requested Path: %s\n", req->path);
   struct request_query_param* foo = get_query_param(req, "foo");
   if (foo != NULL) {

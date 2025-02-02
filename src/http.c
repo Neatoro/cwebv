@@ -10,17 +10,6 @@
 #include "buffer/buffer.h"
 #include "request/parser.h"
 
-struct response create_response(int connection) {
-  struct response res;
-  res.header_count = 0;
-  res.header = NULL;
-  res.connection = connection;
-
-  res.body = NULL;
-
-  return res;
-}
-
 server create_http_server(int port) {
   struct sockaddr_in servaddr;
   server serv;
@@ -88,7 +77,7 @@ void start_server(server *serv) {
     free(page);
 
     struct request req = parse_request(buf.data);
-    struct response res = create_response(connection);
+    response res = response_init(connection);
     response_add_header(&res, "Host", "localhost");
 
     if (serv->handler) {
@@ -105,7 +94,7 @@ void start_server(server *serv) {
 void close_server(server *serv) { close(serv->sock); }
 
 void add_request_handler(
-    server *serv, void (*handler)(struct request *req, struct response *res)
+    server *serv, void (*handler)(struct request *req, response *res)
 ) {
   serv->handler = handler;
 }

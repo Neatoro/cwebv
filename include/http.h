@@ -27,7 +27,7 @@ typedef struct server {
   int sock;
   bool error;
   bool closed;
-  void (*handler)(struct request *req, struct response *res);
+  void (*handler)(struct request *req, response *res);
 } server;
 
 server create_http_server(int port);
@@ -36,6 +36,6 @@ void start_server(server *serv);
 void close_server(server *serv);
 
 void add_request_handler(
-    server *serv, void (*handler)(struct request *req, struct response *res)
+    server *serv, void (*handler)(struct request *req, response *res)
 );
 #endif

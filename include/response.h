@@ -1,23 +1,25 @@
 #ifndef _CWEBV_RESPONSE
 #define _CWEBV_RESPONSE
-struct response_header {
+typedef struct response_header {
   char* name;
   char* value;
-};
+} response_header;
 
-#define response_header_size sizeof(struct response_header)
+#define response_header_size sizeof(response_header)
 
-struct response {
+typedef struct response {
   int header_count;
   int connection;
-  struct response_header* header;
+  response_header* header;
 
   char* body;
-};
+} response;
 
-void response_add_header(struct response* res, char* name, char* value);
+response response_init(int connection);
 
-void response_free(struct response* res);
+void response_add_header(response* res, char* name, char* value);
 
-void response_send(struct response* res);
+void response_free(response* res);
+
+void response_send(response* res);
 #endif

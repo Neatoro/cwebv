@@ -1,6 +1,6 @@
 CC=gcc
 AR=ar
-CFLAGS=-I./include -I./lib
+CFLAGS=-I./include -I./lib -g
 OBJ_DIR=target/obj
 EXAMPLE_OBJ_DIR=target/example/obj
 LIB_SOURCES := $(shell find src -name '*.c' -o -name '*.h')
@@ -27,7 +27,7 @@ $(EXAMPLE_OBJ_DIR)/%.o: example/%.c
 target/example/%: target/libhttp.a $(EXAMPLE_OBJ_DIR)/%.o
 	$(CC) -o $@ $^ -L./target -lhttp
 
-example: target/example/small
+example: target/example/small target/example/default_send
 compile: target/libhttp.a
 
 format: $(EXAMPLE_SOURCES) $(LIB_SOURCES) $(INCLUDE_SOURCES)

@@ -9,14 +9,25 @@
 
 #include "../utils/string_helper.h"
 
-void response_free(struct response* res) {
+response response_init(int connection) {
+  response res;
+  res.header_count = 0;
+  res.header = NULL;
+  res.connection = connection;
+
+  res.body = NULL;
+
+  return res;
+}
+
+void response_free(response* res) {
   if (res->header != NULL) {
     free(res->header);
   }
 }
 
-void response_add_header(struct response* res, char* name, char* value) {
-  struct response_header header;
+void response_add_header(response* res, char* name, char* value) {
+  response_header header;
   header.name = name;
   header.value = value;
 
@@ -32,8 +43,8 @@ void response_add_header(struct response* res, char* name, char* value) {
   res->header_count++;
 }
 
-bool response_has_header(struct response* res, char* name) {
-  struct response_header* header = res->header;
+bool response_has_header(response* res, char* name) {
+  response_header* header = res->header;
   for (int i = 0; i < res->header_count; ++i) {
     char* header_name = strlwr(header->name);
     if (strcmp(header_name, name) == 0) {
@@ -47,7 +58,7 @@ bool response_has_header(struct response* res, char* name) {
   return false;
 }
 
-void response_send(struct response* res) {
+void response_send(response* res) {
   int connection = res->connection;
 
   char* start_line = "HTTP/1.1 200 OK\n";
@@ -57,12 +68,16 @@ void response_send(struct response* res) {
     response_add_header(res, "content-type", "text/plain");
   }
 
+  if (res->body == NULL) {
+    res->body = "";
+  }
+
   int body_size = strlen(res->body);
   char* content_length_value = int_to_str(body_size);
   response_add_header(res, "content-length", content_length_value);
 
   for (int i = 0; i < res->header_count; ++i) {
-    struct response_header header = res->header[i];
+    response_header header = res->header[i];
 
     int header_line_size = strlen(header.name) + strlen(header.value) + 4;
     char header_line[header_line_size];
