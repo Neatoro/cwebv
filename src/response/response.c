@@ -14,6 +14,7 @@ response response_init(int connection) {
   res.header_count = 0;
   res.header = NULL;
   res.connection = connection;
+  res.response_status = RESPONSE_STATUS_NOT_FOUND;
 
   res.body = NULL;
 
@@ -61,8 +62,13 @@ bool response_has_header(response* res, char* name) {
 void response_send(response* res) {
   int connection = res->connection;
 
-  char* start_line = "HTTP/1.1 200 OK\n";
+  int start_line_length = strlen(res->response_status) + 11;
+  char* start_line = malloc(start_line_length);
+  snprintf(
+      start_line, start_line_length, "HTTP/1.1 %s\n", res->response_status
+  );
   send(connection, start_line, strlen(start_line), 0);
+  free(start_line);
 
   if (!response_has_header(res, "content-type")) {
     response_add_header(res, "content-type", "text/plain");

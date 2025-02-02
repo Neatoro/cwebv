@@ -1,5 +1,9 @@
 #ifndef _CWEBV_RESPONSE
 #define _CWEBV_RESPONSE
+
+#define RESPONSE_STATUS_OK "200 OK"
+#define RESPONSE_STATUS_NOT_FOUND "404 Not Found"
+
 typedef struct response_header {
   char* name;
   char* value;
@@ -11,6 +15,7 @@ typedef struct response {
   int header_count;
   int connection;
   response_header* header;
+  char* response_status;
 
   char* body;
 } response;
