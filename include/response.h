@@ -2,6 +2,8 @@
 #define _CWEBV_RESPONSE
 
 #define RESPONSE_STATUS_OK "200 OK"
+#define RESPONSE_STATUS_CREATED "201 Created"
+
 #define RESPONSE_STATUS_NOT_FOUND "404 Not Found"
 
 typedef struct response_header {

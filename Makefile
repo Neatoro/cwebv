@@ -27,7 +27,7 @@ $(EXAMPLE_OBJ_DIR)/%.o: example/%.c
 target/example/%: target/libhttp.a $(EXAMPLE_OBJ_DIR)/%.o
 	$(CC) -o $@ $^ -L./target -lhttp
 
-example: target/example/small target/example/default_send
+example: target/example/small target/example/default_send target/example/rest
 compile: target/libhttp.a
 
 format: $(EXAMPLE_SOURCES) $(LIB_SOURCES) $(INCLUDE_SOURCES)
