@@ -30,6 +30,11 @@ target/example/%: target/libhttp.a $(EXAMPLE_OBJ_DIR)/%.o
 example: target/example/small target/example/default_send target/example/rest
 compile: target/libhttp.a
 
+includes:
+	mkdir -p target/includes/cwebd target/includes/cJSON
+	cp lib/cJSON/cJSON.h target/includes/cJSON
+	cp -R include/*.h target/includes/cwebd 
+
 format: $(EXAMPLE_SOURCES) $(LIB_SOURCES) $(INCLUDE_SOURCES)
 	clang-format -i $^
 
