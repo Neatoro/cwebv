@@ -1,4 +1,4 @@
-#include "http.h"
+#include "http_server.h"
 
 #include <errno.h>
 #include <netinet/in.h>
@@ -10,7 +10,7 @@
 #include "buffer/buffer.h"
 #include "request/parser.h"
 
-server create_http_server(int port) {
+server http_server_init(int port) {
   struct sockaddr_in servaddr;
   server serv;
 
@@ -42,7 +42,7 @@ server create_http_server(int port) {
   return serv;
 }
 
-void start_server(server *serv) {
+void http_server_start(server *serv) {
   struct sockaddr_in client;
   unsigned int len;
 
@@ -91,9 +91,9 @@ void start_server(server *serv) {
   }
 }
 
-void close_server(server *serv) { close(serv->sock); }
+void http_server_close(server *serv) { close(serv->sock); }
 
-void add_request_handler(
+void http_server_set_request_handler(
     server *serv, void (*handler)(struct request *req, response *res)
 ) {
   serv->handler = handler;

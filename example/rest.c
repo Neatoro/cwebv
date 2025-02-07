@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <strings.h>
 
-#include "http.h"
+#include "http_server.h"
 #include "request.h"
 #include "response.h"
 
@@ -29,7 +29,7 @@ void get_message(struct request* req, response* res) {
 }
 
 int main(int argc, char* argv[]) {
-  server srv = create_http_server(8080);
+  server srv = http_server_init(8080);
 
   if (srv.error) {
     return -1;
@@ -37,12 +37,12 @@ int main(int argc, char* argv[]) {
 
   register_exit_handler();
 
-  add_request_handler(&srv, request_handler);
+  http_server_set_request_handler(&srv, request_handler);
 
   rest_srv = rest_server_init(&srv);
 
   rest_server_add_handler(&rest_srv, "get", "/message", get_message);
   rest_server_add_handler(&rest_srv, "post", "/", post_root);
 
-  start_server(&srv);
+  http_server_start(&srv);
 }

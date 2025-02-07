@@ -11,7 +11,7 @@
 #define CLOSE_HANDLER(serv)           \
   void sigint_handler(int signal) {   \
     if (signal == SIGINT) {           \
-      close_server(&serv);            \
+      http_server_close(&serv);       \
       exit(0);                        \
     }                                 \
   }                                   \
@@ -30,11 +30,11 @@ typedef struct server {
   void (*handler)(struct request *req, response *res);
 } server;
 
-server create_http_server(int port);
+server http_server_init(int port);
 
-void start_server(server *serv);
-void close_server(server *serv);
+void http_server_start(server *serv);
+void http_server_close(server *serv);
 
-void add_request_handler(
+void http_server_set_request_handler(
     server *serv, void (*handler)(struct request *req, response *res)
 );

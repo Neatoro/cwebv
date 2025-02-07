@@ -1,21 +1,21 @@
 #pragma once
 
-#include "http.h"
+#include "http_server.h"
 
-#define REST_CLOSE_HANDLER(rest_srv)      \
-  void sigint_handler(int signal) {       \
-    if (signal == SIGINT) {               \
-      close_server(rest_srv.http_server); \
-      rest_server_free(&rest_srv);        \
-      exit(0);                            \
-    }                                     \
-  }                                       \
-                                          \
-  void register_exit_handler() {          \
-    struct sigaction act;                 \
-    bzero(&act, sizeof(act));             \
-    act.sa_handler = &sigint_handler;     \
-    sigaction(SIGINT, &act, NULL);        \
+#define REST_CLOSE_HANDLER(rest_srv)           \
+  void sigint_handler(int signal) {            \
+    if (signal == SIGINT) {                    \
+      http_server_close(rest_srv.http_server); \
+      rest_server_free(&rest_srv);             \
+      exit(0);                                 \
+    }                                          \
+  }                                            \
+                                               \
+  void register_exit_handler() {               \
+    struct sigaction act;                      \
+    bzero(&act, sizeof(act));                  \
+    act.sa_handler = &sigint_handler;          \
+    sigaction(SIGINT, &act, NULL);             \
   }
 
 typedef struct rest_handler {
