@@ -12,7 +12,7 @@ CLOSE_HANDLER(serv)
 
 void request_handler(struct request* req, response* res) {
   printf("Requested Path: %s\n", req->path);
-  struct request_query_param* foo = get_query_param(req, "foo");
+  struct request_query_param* foo = request_get_query_param(req, "foo");
   if (foo != NULL) {
     printf("Foo Query Param: name(%s), value(%s)\n", foo->name, foo->value);
   }
