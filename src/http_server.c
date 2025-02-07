@@ -10,16 +10,16 @@
 #include "buffer/buffer.h"
 #include "request/parser.h"
 
-server http_server_init(int port) {
-  struct sockaddr_in servaddr;
-  server serv;
+http_server http_server_init(int port) {
+  struct sockaddr_in srvaddr;
+  http_server srv;
 
   int sock = socket(AF_INET, SOCK_STREAM, 0);
-  memset(&servaddr, 0, sizeof(servaddr));
+  memset(&srvaddr, 0, sizeof(srvaddr));
 
-  servaddr.sin_family = AF_INET;
-  servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-  servaddr.sin_port = htons(port);
+  srvaddr.sin_family = AF_INET;
+  srvaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+  srvaddr.sin_port = htons(port);
 
   const int option_value = 1;
   const socklen_t option_length = sizeof(option_value);
@@ -28,31 +28,31 @@ server http_server_init(int port) {
       sock, SOL_SOCKET, SO_REUSEADDR, (void *)&option_value, option_length
   );
 
-  int bind_res = bind(sock, (struct sockaddr *)&servaddr, sizeof(servaddr));
+  int bind_res = bind(sock, (struct sockaddr *)&srvaddr, sizeof(srvaddr));
   if (bind_res == -1) {
     printf("Failed binding server: %s\n", strerror(errno));
-    serv.error = true;
-    return serv;
+    srv.error = true;
+    return srv;
   }
 
-  serv.sock = sock;
-  serv.error = false;
-  serv.closed = false;
+  srv.sock = sock;
+  srv.error = false;
+  srv.closed = false;
 
-  return serv;
+  return srv;
 }
 
-void http_server_start(server *serv) {
+void http_server_start(http_server *srv) {
   struct sockaddr_in client;
   unsigned int len;
 
-  listen(serv->sock, 10);
+  listen(srv->sock, 10);
 
-  printf("Server ready\n");
+  printf("http_server ready\n");
 
-  while (!serv->closed) {
+  while (!srv->closed) {
     len = sizeof(client);
-    int connection = accept(serv->sock, (struct sockaddr *)&client, &len);
+    int connection = accept(srv->sock, (struct sockaddr *)&client, &len);
 
     if (connection < 0) {
       printf("Failed to accept connection\n");
@@ -76,12 +76,12 @@ void http_server_start(server *serv) {
 
     free(page);
 
-    struct request req = parse_request(buf.data);
+    request req = parse_request(buf.data);
     response res = response_init(connection);
     response_add_header(&res, "Host", "localhost");
 
-    if (serv->handler) {
-      serv->handler(&req, &res);
+    if (srv->handler) {
+      srv->handler(&req, &res);
     }
 
     close(connection);
@@ -91,10 +91,10 @@ void http_server_start(server *serv) {
   }
 }
 
-void http_server_close(server *serv) { close(serv->sock); }
+void http_server_close(http_server *srv) { close(srv->sock); }
 
 void http_server_set_request_handler(
-    server *serv, void (*handler)(struct request *req, response *res)
+    http_server *srv, void (*handler)(request *req, response *res)
 ) {
-  serv->handler = handler;
+  srv->handler = handler;
 }

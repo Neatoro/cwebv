@@ -6,13 +6,13 @@
 #include "request.h"
 #include "response.h"
 
-server serv;
+http_server serv;
 
 CLOSE_HANDLER(serv)
 
-void request_handler(struct request* req, response* res) {
+void request_handler(request* req, response* res) {
   printf("Requested Path: %s\n", req->path);
-  struct request_query_param* foo = request_get_query_param(req, "foo");
+  request_query_param* foo = request_get_query_param(req, "foo");
   if (foo != NULL) {
     printf("Foo Query Param: name(%s), value(%s)\n", foo->name, foo->value);
   }

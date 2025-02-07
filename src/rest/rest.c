@@ -8,7 +8,7 @@
 #include "../utils/string_helper.h"
 
 void rest_request_handler(
-    rest_server* rest_srv, struct request* req, struct response* res
+    rest_server* rest_srv, request* req, struct response* res
 ) {
   printf("Path: %s, Method: %s\n", req->path, req->method);
 
@@ -33,9 +33,9 @@ void rest_request_handler(
   free(method);
 }
 
-rest_server rest_server_init(server* http_server) {
+rest_server rest_server_init(http_server* http_srv) {
   rest_server rest_srv;
-  rest_srv.http_server = http_server;
+  rest_srv.http_srv = http_srv;
 
   rest_srv.registered_handlers = 0;
   rest_srv.allocated_handlers = 0;
@@ -56,7 +56,7 @@ void rest_server_free(rest_server* rest_srv) {
 
 void rest_server_add_handler(
     rest_server* rest_srv, char* method, char* path,
-    void (*handler)(struct request* req, response* res)
+    void (*handler)(request* req, response* res)
 ) {
   rest_handler rest_hdl;
   rest_hdl.method = strlwr(method);

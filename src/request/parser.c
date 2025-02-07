@@ -17,7 +17,7 @@ int count_chars(char* s, char match) {
   return count;
 }
 
-char* parse_method(char* rdp, struct request* req) {
+char* parse_method(char* rdp, request* req) {
   static const char* ws = " ";
   char* method = rdp;
   rdp += strcspn(rdp, ws);
@@ -30,7 +30,7 @@ char* parse_method(char* rdp, struct request* req) {
   return rdp;
 }
 
-char* parse_query(char* rdp, struct request* req) {
+char* parse_query(char* rdp, request* req) {
   static const char* ws = " ";
   static const char* q = "?";
   rdp += strcspn(rdp, q);
@@ -46,8 +46,8 @@ char* parse_query(char* rdp, struct request* req) {
   if (strlen(query) > 0) {
     int query_params_count = count_chars(query, '&') + 1;
 
-    struct request_query_param* query_params =
-        malloc(query_params_count * sizeof(struct request_query_param));
+    request_query_param* query_params =
+        malloc(query_params_count * sizeof(request_query_param));
 
     for (int i = 0; i < query_params_count; ++i) {
       size_t name_len = strcspn(query, "=");
@@ -68,7 +68,7 @@ char* parse_query(char* rdp, struct request* req) {
   return rdp;
 }
 
-char* parse_path(char* rdp, struct request* req) {
+char* parse_path(char* rdp, request* req) {
   static const char* ws = " ";
   char* path = rdp;
   rdp += strcspn(rdp, ws);
@@ -82,8 +82,8 @@ char* parse_path(char* rdp, struct request* req) {
   return rdp;
 }
 
-struct request parse_request(char* request_data) {
-  struct request req;
+request parse_request(char* request_data) {
+  request req;
   req.query_params_count = 0;
   req.query = NULL;
 

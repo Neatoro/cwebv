@@ -23,18 +23,18 @@
     sigaction(SIGINT, &act, NULL);    \
   }
 
-typedef struct server {
+typedef struct http_server {
   int sock;
   bool error;
   bool closed;
-  void (*handler)(struct request *req, response *res);
-} server;
+  void (*handler)(request *req, response *res);
+} http_server;
 
-server http_server_init(int port);
+http_server http_server_init(int port);
 
-void http_server_start(server *serv);
-void http_server_close(server *serv);
+void http_server_start(http_server *srv);
+void http_server_close(http_server *srv);
 
 void http_server_set_request_handler(
-    server *serv, void (*handler)(struct request *req, response *res)
+    http_server *srv, void (*handler)(request *req, response *res)
 );

@@ -6,11 +6,11 @@
 #include "request.h"
 #include "response.h"
 
-server serv;
+http_server serv;
 
 CLOSE_HANDLER(serv)
 
-void request_handler(struct request* req, response* res) { response_send(res); }
+void request_handler(request* req, response* res) { response_send(res); }
 
 int main(int argc, char* argv[]) {
   serv = http_server_init(8080);
