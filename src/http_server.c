@@ -59,7 +59,7 @@ void http_server_start(http_server *srv) {
       continue;
     }
 
-    struct buffer buf = buffer_init();
+    buffer buf = buffer_init();
     int recv_size = 0;
     char *page = malloc(DEFAULT_SIZE);
 
@@ -85,7 +85,7 @@ void http_server_start(http_server *srv) {
     }
 
     close(connection);
-    buffer_free(buf);
+    buffer_free(&buf);
     request_free(&req);
     response_free(&res);
   }

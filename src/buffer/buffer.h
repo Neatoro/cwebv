@@ -4,14 +4,14 @@
 
 #define DEFAULT_SIZE 1024 * sizeof(char)
 
-struct buffer {
+typedef struct buffer {
   uint32_t used_size;
   uint32_t allocated_size;
   char* data;
-};
+} buffer;
 
-struct buffer buffer_init();
+buffer buffer_init();
 
-void buffer_free(struct buffer buf);
+void buffer_free(buffer* buf);
 
-void buffer_append_data(struct buffer* buf, char* data, int len);
+void buffer_append_data(buffer* buf, char* data, int len);
