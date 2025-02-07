@@ -1,5 +1,5 @@
-#ifndef _CWEBV_REQUEST
-#define _CWEBV_REQUEST
+#pragma once
+
 struct request_query_param {
   char* name;
   char* value;
@@ -16,4 +16,3 @@ struct request {
 void request_free(struct request* req);
 
 struct request_query_param* get_query_param(struct request* req, char* name);
-#endif

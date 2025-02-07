@@ -1,5 +1,5 @@
-#ifndef _CWEBV_HTTP
-#define _CWEBV_HTTP
+#pragma once
+
 #include <signal.h>
 #include <stdbool.h>
 #include <sys/socket.h>
@@ -38,4 +38,3 @@ void close_server(server *serv);
 void add_request_handler(
     server *serv, void (*handler)(struct request *req, response *res)
 );
-#endif

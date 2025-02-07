@@ -1,5 +1,4 @@
-#ifndef _CWEBV_STRING_HELPER
-#define _CWEBV_STRING_HELPER
+#pragma once
+
 char* strlwr(char* original);
 char* int_to_str(int i);
-#endif

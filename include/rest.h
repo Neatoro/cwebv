@@ -1,5 +1,4 @@
-#ifndef _CWEBV_REST
-#define _CWEBV_REST
+#pragma once
 
 #include "http.h"
 
@@ -46,5 +45,3 @@ void rest_server_add_handler(
     rest_server* rest_srv, char* method, char* path,
     void (*handler)(struct request* req, response* res)
 );
-
-#endif

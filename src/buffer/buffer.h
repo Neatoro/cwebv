@@ -1,5 +1,5 @@
-#ifndef _CWEBV_BUFFER
-#define _CWEBV_BUFFER
+#pragma once
+
 #include <stdint.h>
 
 #define DEFAULT_SIZE 1024 * sizeof(char)
@@ -15,4 +15,3 @@ struct buffer buffer_init();
 void buffer_free(struct buffer buf);
 
 void buffer_append_data(struct buffer* buf, char* data, int len);
-#endif

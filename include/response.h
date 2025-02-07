@@ -1,5 +1,4 @@
-#ifndef _CWEBV_RESPONSE
-#define _CWEBV_RESPONSE
+#pragma once
 
 #define RESPONSE_STATUS_OK "200 OK"
 #define RESPONSE_STATUS_CREATED "201 Created"
@@ -29,4 +28,3 @@ void response_add_header(response* res, char* name, char* value);
 void response_free(response* res);
 
 void response_send(response* res);
-#endif
