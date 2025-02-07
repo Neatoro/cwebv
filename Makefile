@@ -10,30 +10,34 @@ INCLUDE_SOURCES := $(shell find include -name '*.h')
 
 TARGET = clean compile
 
-lib/cJSON/cJSON.o:
+lib/cJSON/libcjson.a:
 	make -C ./lib/cJSON static
 
 $(OBJ_DIR)/%.o: src/%.c
 	mkdir -p $(dir $@)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-target/libhttp.a: $(addprefix $(OBJ_DIR)/,$(LIB_OBJ)) lib/cJSON/cJSON.o
-	$(AR) rcs target/libhttp.a $^
+target/libcwebv.a: $(addprefix $(OBJ_DIR)/,$(LIB_OBJ))
+	$(AR) rcs $@ $^
 
 $(EXAMPLE_OBJ_DIR)/%.o: example/%.c
 	mkdir -p $(dir $@)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-target/example/%: target/libhttp.a $(EXAMPLE_OBJ_DIR)/%.o
-	$(CC) -o $@ $^ -L./target -lhttp
+target/example/%: target/libcwebv.a lib/cJSON/libcjson.a $(EXAMPLE_OBJ_DIR)/%.o
+	$(CC) -o $@ $^ -L./target
 
 example: target/example/small target/example/default_send target/example/rest
-compile: target/libhttp.a
+compile: target/libcwebv.a lib/cJSON/libcjson.a
 
 includes:
-	mkdir -p target/includes/cwebd target/includes/cJSON
+	mkdir -p target/includes/cwebv target/includes/cJSON
 	cp lib/cJSON/cJSON.h target/includes/cJSON
-	cp -R include/*.h target/includes/cwebd 
+	cp -R include/*.h target/includes/cwebv 
+
+release: clean compile includes
+	cp lib/cJSON/libcjson.a target
+	rm -rf target/obj
 
 format: $(EXAMPLE_SOURCES) $(LIB_SOURCES) $(INCLUDE_SOURCES)
 	clang-format -i $^
