@@ -1,0 +1,16 @@
+FROM ubuntu as build
+
+WORKDIR /build
+
+RUN apt-get update
+RUN apt-get install -y gcc make
+
+COPY . .
+
+RUN make example
+
+FROM ubuntu
+
+COPY --from=build /build/target/example/rest /app/rest
+
+ENTRYPOINT [ "/app/rest" ]

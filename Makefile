@@ -25,7 +25,7 @@ $(EXAMPLE_OBJ_DIR)/%.o: example/%.c
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 target/example/%: target/libcwebv.a lib/cJSON/libcjson.a $(EXAMPLE_OBJ_DIR)/%.o
-	$(CC) -o $@ $^ -L./target
+	$(CC) -o $@ $^ -L./target -lcwebv
 
 example: target/example/small target/example/default_send target/example/rest
 compile: target/libcwebv.a lib/cJSON/libcjson.a
